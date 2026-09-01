@@ -104,14 +104,12 @@ body {
   overflow: hidden;
 }
 
-/* Banner Header Logo */
-/* Perbaikan Banner Image Overflow */
 .banner-wrapper {
   width: 100%;
   max-width: 100%;
   margin-bottom: 24px;
   border-radius: 12px;
-  overflow: hidden; /* Mencegah gambar melebar keluar dari pembungkus */
+  overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   display: flex;
   justify-content: center;
@@ -119,9 +117,9 @@ body {
 }
 
 .banner-img {
-  width: 100% !important;     /* Memaksa lebar gambar mengikuti pembungkus */
-  max-width: 100% !important; /* Mencegah melebar melampaui kartu */
-  height: auto !important;    /* Menjaga rasio foto agar tidak gepeng */
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
   display: block;
   object-fit: cover;
 }
@@ -365,6 +363,53 @@ body {
   font-weight: 600;
   cursor: pointer;
   margin-right: 10px;
+}
+
+/* ==========================================
+   TERMS & CONDITIONS CHECKBOX BOX
+   ========================================== */
+.checkbox-group {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 12.5px;
+  color: #334155;
+  line-height: 1.5;
+  cursor: pointer;
+  background-color: #f8fafc;
+  border: 1px solid var(--input-border);
+  padding: 14px 16px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+}
+
+.checkbox-label:hover {
+  border-color: var(--primary-cyan);
+  background-color: #f0f9ff;
+}
+
+.checkbox-label input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  accent-color: var(--primary-blue);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.checkbox-label a {
+  color: var(--primary-blue);
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.checkbox-label a:hover {
+  color: var(--primary-cyan);
 }
 
 /* ==========================================
