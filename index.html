@@ -76,21 +76,23 @@
           <span class="verified-icon">✓ Terverifikasi</span>
         </div>
 
-        <!-- SYARAT, KETENTUAN & KEBIJAKAN PRIVASI -->
+        <!-- SYARAT, KETENTUAN & KEBIJAKAN PRIVASI (PERBAIKAN STRUKTUR) -->
         <div class="terms-card">
-          <div class="terms-header">
-            <span class="terms-icon">📜</span>
-            <div>
-              <h4>Syarat, Ketentuan & Kebijakan Privasi</h4>
-              <p>Harap baca dan setujui ketentuan pendaftaran sebelum mengisi formulir.</p>
-            </div>
+          <div class="form-section-title" style="margin-top: 0; margin-bottom: 6px;">
+            📜 Syarat, Ketentuan & Kebijakan Privasi
           </div>
-          
-          <div class="terms-actions">
-            <a href="terms.html" target="_blank" class="btn-terms-link">
+          <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 12px;">
+            Harap baca dan setujui ketentuan pendaftaran sebelum mengisi formulir.
+          </p>
+
+          <div style="margin-bottom: 12px;">
+            <a href="terms.html" target="_blank" style="font-size: 12.5px; color: var(--primary-blue); font-weight: 600; text-decoration: underline;">
               🔗 Baca Syarat & Kebijakan Privasi (Buka di Tab Baru)
             </a>
-            <label class="terms-checkbox-label">
+          </div>
+
+          <div class="checkbox-group">
+            <label class="checkbox-label">
               <input type="checkbox" id="agreeTermsCheckbox" required>
               <span>Saya telah membaca dan menyetujui seluruh <strong>Syarat, Ketentuan, dan Kebijakan Privasi</strong> kegiatan Briska Corp. <span class="required">*</span></span>
             </label>
@@ -107,7 +109,7 @@
           </select>
         </div>
 
-        <!-- 2. Pilih Bidang / Sub-Kategori Event (Dinamis dari event_list.txt) -->
+        <!-- 2. Pilih Bidang / Sub-Kategori Event -->
         <div class="form-group">
           <label for="bidang_kegiatan">Pilih Bidang / Kategori Event <span class="required">*</span></label>
           <select id="bidang_kegiatan" required disabled>
@@ -301,7 +303,7 @@
       
       <div id="responseMessage" class="hidden"></div>
 
-      <!-- 3. HALAMAN SUCCESS PAGE (DITAMPILKAN SETELAH BERHASIL SUBMIT) -->
+      <!-- 3. HALAMAN SUCCESS PAGE -->
       <div id="successPage" class="success-page hidden">
         <div class="success-icon-wrap">
           <div class="success-icon">✓</div>
