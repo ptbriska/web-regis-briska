@@ -1,0 +1,5 @@
+TRYOUT-01 : TPS, TKA Saintek, TKA Soshum
+WEBINAR-DESAIN : UI/UX Design, Graphic Design, Video Editing
+OLIMPIADE-SMA : Matematika, Fisika, Kimia, Biologi
+PELATIHAN-GURU : Kebumian, Astronomi, Geografi
+GEODATIS-SEP26 : NDWI, GEE Advance, Model Risiko Bencana

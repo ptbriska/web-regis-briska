@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Registrasi Pendaftaran Event - Briska Corp</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="./styles.css">
+
+  <style>
+    .hidden { display: none !important; }
+  </style>
+
+  <!-- Google Identity Services -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+
+  <!-- Background Tech Patterns -->
+  <div class="bg-pattern-grid"></div>
+  <div class="bg-pattern-glow"></div>
+
+  <div class="main-wrapper">
+    <div class="form-card">
+      
+      <!-- Banner Header Logo -->
+      <div class="banner-wrapper">
+        <img src="2026-08-12_Banner Form Online.png" alt="Banner Form Online Briska Corp" class="banner-img">
+      </div>
+
+      <!-- Header Teks Pembuka -->
+      <div id="formHeader" class="form-header">
+        <div class="badge-tag">ONLINE FORM AUTHENTICATED & VALIDATED</div>
+        <h2>Selamat Datang di Portal Registrasi Pendaftaran Event/Kegiatan Briska Corp</h2>
+        <p>Silakan otentikasi akun Gmail Anda terlebih dahulu untuk mengisi formulir pendaftaran.</p>
+      </div>
+
+      <!-- 1. LOGIN GUARD (PEMBATAS AKSES GMAIL) -->
+      <div id="loginGuard" class="login-guard-box">
+        <div class="lock-avatar">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+        </div>
+        <h3>Otentikasi Akun Google</h3>
+        <p>Anda wajib masuk menggunakan akun Gmail aktif untuk melanjutkan.</p>
+
+        <div class="google-btn-wrapper">
+          <div id="g_id_onload"
+            data-client_id="353808312226-lle3p3ju0pua4i718olv9m3654sr2alf.apps.googleusercontent.com"
+            data-callback="handleCredentialResponse"
+            data-auto_prompt="false">
+          </div>
+          <div class="g_id_signin"
+            data-type="standard"
+            data-size="large"
+            data-theme="outline"
+            data-text="continue_with"
+            data-shape="pill"
+            data-logo_alignment="left">
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. FORMULIR REGISTRASI (DIPROTEKSI) -->
+      <form id="registrationForm" class="hidden">
+        
+        <div class="user-badge">
+          <div class="user-info">
+            <span class="label">Terverifikasi sebagai:</span>
+            <strong id="verifiedEmailText">email@gmail.com</strong>
+          </div>
+          <span class="verified-icon">✓ Terverifikasi</span>
+        </div>
+
+        <div class="form-section-title">A. Data Event & Skema Tarif</div>
+
+        <!-- 1. Pilih Event / Kegiatan -->
+        <div class="form-group">
+          <label for="kode_kegiatan">Pilih Event / Kegiatan <span class="required">*</span></label>
+          <select id="kode_kegiatan" required>
+            <option value="">-- Memuat Daftar Event... --</option>
+          </select>
+        </div>
+
+        <!-- 2. Pilih Bidang / Sub-Kategori Event (Dinamis dari event_list.txt) -->
+        <div class="form-group">
+          <label for="bidang_kegiatan">Pilih Bidang / Kategori Event <span class="required">*</span></label>
+          <select id="bidang_kegiatan" required disabled>
+            <option value="">-- Pilih Event Terlebih Dahulu --</option>
+          </select>
+        </div>
+
+        <!-- 3. Skema / Opsi Tarif Pendaftaran -->
+        <div class="form-group">
+          <label for="jalur_daftar">Skema / Opsi Tarif Pendaftaran <span class="required">*</span></label>
+          <select id="jalur_daftar" required>
+            <option value="">-- Pilih Skema Tarif --</option>
+            <option value="normal">1. Tarif Normal</option>
+            <option value="early_bird">2. Tarif Early Bird</option>
+            <option value="kolektif">3. Tarif Kolektif (3 Orang)</option>
+            <option value="alumni">4. Tarif Alumni</option>
+            <option value="riau_sulsel">5. Tarif Khusus Wilayah (Asal Riau & Sulsel)</option>
+            <option value="profesi">6. Tarif Khusus Profesi (Mahasiswa / Guru / Dll)</option>
+            <option value="bersyarat">7. Tarif Bersyarat (Medsos)</option>
+            <option value="daerah_3t">8. Tarif Gratis Wilayah 3T</option>
+            <option value="freemium">9. Tarif Gratis Freemium</option>
+          </select>
+        </div>
+
+        <!-- Informasi Arahan Khusus Kolektif -->
+        <div id="infoKolektif" class="info-alert hidden">
+          <span class="alert-icon">💡</span>
+          <div>
+            <strong>Arahan Tarif Kolektif 3 Orang:</strong><br>
+            Pastikan ke-3 peserta dalam kelompok mengunggah <u>file bukti bayar yang sama</u>.
+          </div>
+        </div>
+
+        <div class="form-section-title">B. Identitas Diri Peserta</div>
+
+        <div class="form-grid">
+          <div class="form-group span-2">
+            <label for="nama_lengkap">Nama Lengkap Peserta <span class="required">*</span></label>
+            <input type="text" id="nama_lengkap" placeholder="Masukkan nama lengkap beserta gelar (jika ada)" required>
+          </div>
+
+          <div class="form-group">
+            <label for="nomor_hp">Nomor HP / WhatsApp <span class="required">*</span></label>
+            <input type="text" id="nomor_hp" placeholder="Contoh: 081234567890" required>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email (Gmail Terverifikasi) <span class="required">*</span></label>
+            <input type="email" id="email" readonly required class="input-disabled">
+          </div>
+
+          <div class="form-group">
+            <label for="jenis_kelamin">Jenis Kelamin <span class="required">*</span></label>
+            <select id="jenis_kelamin" required>
+              <option value="">-- Pilih Jenis Kelamin --</option>
+              <option value="Laki-laki">Laki-laki</option>
+              <option value="Perempuan">Perempuan</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="nomor_identitas">NIK / NISN / NIM / No. Peserta <span class="required">*</span></label>
+            <input type="text" id="nomor_identitas" placeholder="Masukkan nomor identitas pendukung" required>
+          </div>
+
+          <div class="form-group span-2">
+            <label for="asal_instansi">Asal Instansi / Sekolah / Kampus <span class="required">*</span></label>
+            <input type="text" id="asal_instansi" placeholder="Contoh: Universitas Hasanuddin / SMA 1" required>
+          </div>
+
+          <div class="form-group span-2">
+            <label for="pekerjaan_jurusan">Pekerjaan / Kelas / Jurusan Kuliah <span class="required">*</span></label>
+            <input type="text" id="pekerjaan_jurusan" placeholder="Contoh: S1 Teknik Informatika / Kelas 12 IPA" required>
+          </div>
+
+          <div class="form-group">
+            <label for="asal_kabupaten">Asal Kabupaten / Kota <span class="required">*</span></label>
+            <input type="text" id="asal_kabupaten" placeholder="Contoh: Kota Makassar / Kab. Gowa" required>
+          </div>
+
+          <div class="form-group">
+            <label for="asal_provinsi">Asal Provinsi <span class="required">*</span></label>
+            <select id="asal_provinsi" required>
+              <option value="">-- Pilih Provinsi --</option>
+              <option value="Aceh">Aceh</option>
+              <option value="Sumatera Utara">Sumatera Utara</option>
+              <option value="Sumatera Barat">Sumatera Barat</option>
+              <option value="Riau">Riau</option>
+              <option value="Kepulauan Riau">Kepulauan Riau</option>
+              <option value="Jambi">Jambi</option>
+              <option value="Sumatera Selatan">Sumatera Selatan</option>
+              <option value="Bangka Belitung">Bangka Belitung</option>
+              <option value="Bengkulu">Bengkulu</option>
+              <option value="Lampung">Lampung</option>
+              <option value="DKI Jakarta">DKI Jakarta</option>
+              <option value="Jawa Barat">Jawa Barat</option>
+              <option value="Banten">Banten</option>
+              <option value="Jawa Tengah">Jawa Tengah</option>
+              <option value="DI Yogyakarta">DI Yogyakarta</option>
+              <option value="Jawa Timur">Jawa Timur</option>
+              <option value="Bali">Bali</option>
+              <option value="Nusa Tenggara Barat">Nusa Tenggara Barat</option>
+              <option value="Nusa Tenggara Timur">Nusa Tenggara Timur</option>
+              <option value="Kalimantan Barat">Kalimantan Barat</option>
+              <option value="Kalimantan Tengah">Kalimantan Tengah</option>
+              <option value="Kalimantan Selatan">Kalimantan Selatan</option>
+              <option value="Kalimantan Timur">Kalimantan Timur</option>
+              <option value="Kalimantan Utara">Kalimantan Utara</option>
+              <option value="Sulawesi Utara">Sulawesi Utara</option>
+              <option value="Gorontalo">Gorontalo</option>
+              <option value="Sulawesi Tengah">Sulawesi Tengah</option>
+              <option value="Sulawesi Barat">Sulawesi Barat</option>
+              <option value="Sulawesi Selatan">Sulawesi Selatan</option>
+              <option value="Sulawesi Tenggara">Sulawesi Tenggara</option>
+              <option value="Maluku">Maluku</option>
+              <option value="Maluku Utara">Maluku Utara</option>
+              <option value="Papua">Papua</option>
+              <option value="Papua Barat">Papua Barat</option>
+              <option value="Papua Selatan">Papua Selatan</option>
+              <option value="Papua Tengah">Papua Tengah</option>
+              <option value="Papua Pegunungan">Papua Pegunungan</option>
+              <option value="Papua Barat Daya">Papua Barat Daya</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-section-title">C. Upload Berkas Persyaratan</div>
+
+        <!-- DYNAMIC UPLOAD SECTIONS -->
+        <div id="secBayar" class="upload-section hidden">
+          <div class="upload-box">
+            <label for="bukti_bayar">Upload Bukti Transfer / Pembayaran (JPG/PNG) <span class="required">*</span></label>
+            <input type="file" id="bukti_bayar" accept="image/jpeg, image/png" disabled>
+          </div>
+        </div>
+
+        <div id="secKtp" class="upload-section hidden">
+          <div class="upload-box">
+            <label for="bukti_ktp">Upload Foto KTP <span class="required">*</span></label>
+            <input type="file" id="bukti_ktp" accept="image/jpeg, image/png" disabled>
+          </div>
+        </div>
+
+        <div id="secIdentitasSpesifik" class="upload-section hidden">
+          <div class="upload-box">
+            <label for="bukti_identitas_spesifik">Upload Foto Identitas Spesifik (KTM/NUPTK/Kartu Pegawai/ID Card) <span class="required">*</span></label>
+            <input type="file" id="bukti_identitas_spesifik" accept="image/jpeg, image/png" disabled>
+          </div>
+        </div>
+
+        <div id="secMedsos" class="upload-section hidden">
+          <div class="upload-box">
+            <label for="bukti_follow_kelasbisa">1. Upload Bukti Follow @kelasbisaid <span class="required">*</span></label>
+            <input type="file" id="bukti_follow_kelasbisa" accept="image/jpeg, image/png" disabled>
+          </div>
+          <div class="upload-box">
+            <label for="bukti_follow_pelaksana">2. Upload Bukti Follow IG Pelaksana (@pilar.juara / @geodatis / lainnya) <span class="required">*</span></label>
+            <input type="file" id="bukti_follow_pelaksana" accept="image/jpeg, image/png" disabled>
+          </div>
+          <div class="upload-box">
+            <label for="bukti_komen_tag">3. Upload Bukti Komentar Tag 10 Teman <span class="required">*</span></label>
+            <input type="file" id="bukti_komen_tag" accept="image/jpeg, image/png" disabled>
+          </div>
+          <div class="upload-box">
+            <label for="bukti_share_wa_tele">4. Upload Bukti Share Konten ke Grup WA/Telegram <span class="required">*</span></label>
+            <input type="file" id="bukti_share_wa_tele" accept="image/jpeg, image/png" disabled>
+          </div>
+          <div class="upload-box">
+            <label for="bukti_share_story">5. Upload Bukti Share Konten ke Story WA/IG <span class="required">*</span></label>
+            <input type="file" id="bukti_share_story" accept="image/jpeg, image/png" disabled>
+          </div>
+        </div>
+
+        <div class="form-section-title">D. Konfirmasi Akhir</div>
+
+        <!-- PERTANYAAN PENUTUP -->
+        <div class="form-group">
+          <label for="persetujuan_iklan">Apakah Bersedia Mendapatkan Update Iklan di Email Terkait Produk Briska Holding Group? <span class="required">*</span></label>
+          <select id="persetujuan_iklan" required>
+            <option value="">-- Pilih Persetujuan --</option>
+            <option value="Ya">Ya, Saya Bersedia</option>
+            <option value="Tidak">Tidak</option>
+          </select>
+        </div>
+
+        <button type="submit" id="btnSubmit" class="btn-submit">
+          <span>Kirim Pendaftaran</span>
+        </button>
+
+      </form>
+      
+      <div id="responseMessage" class="hidden"></div>
+
+      <!-- 3. HALAMAN SUCCESS PAGE (DITAMPILKAN SETELAH BERHASIL SUBMIT) -->
+      <div id="successPage" class="success-page hidden">
+        <div class="success-icon-wrap">
+          <div class="success-icon">✓</div>
+        </div>
+
+        <h2>Pendaftaran Berhasil</h2>
+        
+        <p class="success-intro">
+          Terima kasih telah melengkapi dan mengirimkan data pendaftaran. Data Anda telah kami terima dan akan diproses sesuai dengan ketentuan kegiatan.
+        </p>
+
+        <div class="success-alert">
+          Mohon pastikan informasi yang Anda berikan sudah benar. Informasi lebih lanjut mengenai tahapan berikutnya akan disampaikan melalui kontak yang telah Anda cantumkan.
+        </div>
+
+        <p class="cs-instruction">
+          Jika Anda memiliki pertanyaan, membutuhkan informasi lebih lanjut, atau ingin melakukan konfirmasi terkait pendaftaran, silakan menghubungi layanan Customer Service (CS) sesuai kebutuhan Anda:
+        </p>
+
+        <div class="section-subtitle">Layanan Customer Service</div>
+
+        <div class="cs-grid">
+          <a href="https://wa.me/6282268118842" target="_blank" class="cs-card">
+            <div class="cs-title">CEO – Kak Bimo</div>
+            <div class="cs-link">WhatsApp: +62 822-6811-8842</div>
+          </a>
+
+          <a href="https://wa.me/628119944511" target="_blank" class="cs-card">
+            <div class="cs-title">Perusahaan Holding – Briska</div>
+            <div class="cs-link">WhatsApp: +62 811-9944-511</div>
+          </a>
+
+          <a href="https://wa.me/6285711000363" target="_blank" class="cs-card">
+            <div class="cs-title">Bimbel & Pelatihan – Kelas Bisa</div>
+            <div class="cs-link">WhatsApp: +62 857-1100-0363</div>
+          </a>
+
+          <a href="https://wa.me/628581200045" target="_blank" class="cs-card">
+            <div class="cs-title">Penerbit Buku – Pena Bisa</div>
+            <div class="cs-link">WhatsApp: +62 858-1200-045</div>
+          </a>
+        </div>
+
+        <div class="section-subtitle" style="margin-top: 25px;">Bergabung dengan Komunitas</div>
+        <p class="community-desc">
+          Dapatkan informasi terbaru mengenai kegiatan, program, dan berbagai aktivitas kami dengan bergabung ke komunitas:
+        </p>
+
+        <div class="community-buttons">
+          <a href="https://whatsapp.com/channel/0029VbCLqDkCHDyeEiovrG44" target="_blank" class="btn-community btn-wa">
+            📱 WhatsApp Channel
+          </a>
+          <a href="https://t.me/pokiedu" target="_blank" class="btn-community btn-tele">
+            ✈️ Telegram Komunitas
+          </a>
+        </div>
+
+        <p class="success-footer">
+          Sampai jumpa dan terima kasih atas partisipasi Anda. Kami menantikan kehadiran Anda dalam kegiatan yang telah didaftarkan.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <script src="./script.js"></script>
+</body>
+</html>
