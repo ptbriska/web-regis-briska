@@ -1,4 +1,5 @@
 PLR-POCI-001  : Kimia, Biologi, Informatika, Fisika, Kebumian, Astronomi, Geografi, Ekonomi, Kecerdasan Buatan (AI), Matematika, Nuklir, Linguistik, Sejarah, IPA, IPS, Metodologi & Statistika Penelitian
+PLR-POCI-002  : Kimia, Biologi, Informatika, Fisika, Kebumian, Astronomi, Geografi, Ekonomi, Kecerdasan Buatan (AI), Matematika, Nuklir, Linguistik, Sejarah, IPA, IPS, Metodologi & Statistika Penelitian
 PLR106KT-ELEMENTA2027 : Kebumian, Geografi, Astronomi
 PLR08PO-PLASMAOSK27-B1 : Kimia, Biologi, Informatika, Fisika, Kebumian, Astronomi, Geografi, Ekonomi, Kecerdasan Buatan (AI), Matematika
 PLR07PS-OSKPro27-B1 : Kebumian, Geografi, Astronomi
