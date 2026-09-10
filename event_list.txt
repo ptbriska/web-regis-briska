@@ -1,5 +1,13 @@
-TRYOUT-01 : TPS, TKA Saintek, TKA Soshum
-WEBINAR-DESAIN : UI/UX Design, Graphic Design, Video Editing
-OLIMPIADE-SMA : Matematika, Fisika, Kimia, Biologi
-PELATIHAN-GURU : Kebumian, Astronomi, Geografi
-GEODATIS-SEP26 : NDWI, GEE Advance, Model Risiko Bencana
+PLR-POCI-001  : Kimia, Biologi, Informatika, Fisika, Kebumian, Astronomi, Geografi, Ekonomi, Kecerdasan Buatan (AI), Matematika, Nuklir, Linguistik, Sejarah, IPA, IPS, Metodologi & Statistika Penelitian
+PLR106KT-ELEMENTA2027 : Kebumian, Geografi, Astronomi
+PLR08PO-PLASMAOSK27-B1 : Kimia, Biologi, Informatika, Fisika, Kebumian, Astronomi, Geografi, Ekonomi, Kecerdasan Buatan (AI), Matematika
+PLR07PS-OSKPro27-B1 : Kebumian, Geografi, Astronomi
+PLR31PS-GuruOSN-B1 : Kimia, Biologi, Informatika, Fisika, Kebumian, Astronomi, Geografi, Ekonomi, Kecerdasan Buatan (AI), Matematika
+GDS01PO-Webgrids-SEP26 : OrangeML, GEE, JAMOVI
+GDS02PO-SC-OKT26 : tba
+GDS03PO-LC-OKT26 : HEC-RASHMS
+GTR01PS-PRIME1 : IPDN, PKN STAN, POLTEKIP, POLTEKIM, STIS, STMKG, PSSN STSN, PTK Kemenhub, CASN
+GTR07KT-KUTUSKD : IPDN, PKN STAN, POLTEKIP, POLTEKIM, STIS, STMKG, PSSN STSN, PTK Kemenhub, CASN
+GTR08PS-BinsikGT : IPDN, PKN STAN, POLTEKIP, POLTEKIM, STIS, STMKG, PSSN STSN, PTK Kemenhub
+GTR-GCI-001 : IPDN, PKN STAN, POLTEKIP, POLTEKIM, STIS, STMKG, PSSN STSN, PTK Kemenhub, CASN
+ARP07PS-Sempro-B1 : Saintek, Soshum
