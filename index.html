@@ -129,23 +129,35 @@
 
         <div class="form-section-title">A. Data Event & Skema Tarif</div>
 
-        <!-- 1. Pilih Event / Kegiatan -->
+        <!-- 1. BARU: Pilih Kategori Produk / Brand -->
         <div class="form-group">
-          <label for="kode_kegiatan">Pilih Event / Kegiatan <span class="required">*</span></label>
-          <select id="kode_kegiatan" required>
-            <option value="">-- Memuat Daftar Event... --</option>
+          <label for="kategori_brand">Pilih Kategori Produk / Brand <span class="required">*</span></label>
+          <select id="kategori_brand" required>
+            <option value="">-- Pilih Kategori Produk / Brand --</option>
+            <option value="event">1. Event & Lomba Ujian (Barugahub)</option>
+            <option value="training">2. Pelatihan & Bimbel (Kelas Bisa)</option>
+            <option value="to">3. Paket Try Out / Simulasi Ujian (Kelas Bisa)</option>
+            <option value="buku">4. Buku & Paket Ujian (Pena Bisa)</option>
           </select>
         </div>
 
-        <!-- 2. Pilih Bidang / Sub-Kategori Event -->
+        <!-- 2. Pilih Event / Produk / Kegiatan -->
+        <div class="form-group">
+          <label for="kode_kegiatan">Pilih Event / Produk / Kegiatan <span class="required">*</span></label>
+          <select id="kode_kegiatan" required disabled>
+            <option value="">-- Pilih Kategori Produk Terlebih Dahulu --</option>
+          </select>
+        </div>
+
+        <!-- 3. Pilih Bidang / Sub-Kategori Event -->
         <div class="form-group">
           <label for="bidang_kegiatan">Pilih Bidang / Kategori Event <span class="required">*</span></label>
           <select id="bidang_kegiatan" required disabled>
-            <option value="">-- Pilih Event Terlebih Dahulu --</option>
+            <option value="">-- Pilih Produk Terlebih Dahulu --</option>
           </select>
         </div>
 
-        <!-- 3. Skema / Opsi Tarif Pendaftaran -->
+        <!-- 4. Skema / Opsi Tarif Pendaftaran -->
         <div class="form-group">
           <label for="jalur_daftar">Skema / Opsi Tarif Pendaftaran <span class="required">*</span></label>
           <select id="jalur_daftar" required>
@@ -179,13 +191,13 @@
             <input type="text" id="nama_lengkap" placeholder="Masukkan nama lengkap beserta gelar (jika ada)" required>
           </div>
 
-          <!-- INPUT BARU: USERNAME CUSTOM -->
+          <!-- INPUT USERNAME CUSTOM -->
           <div class="form-group">
             <label for="username">Username Akses CBT / Ujian <span class="required">*</span></label>
             <input type="text" id="username" placeholder="Buat username unik (contoh: bimo123)" required>
           </div>
 
-          <!-- INPUT BARU: USER TOKEN (PASSWORD AUTO GENERATE) -->
+          <!-- INPUT USER TOKEN (PASSWORD AUTO GENERATE) -->
           <div class="form-group">
             <label for="user_token">User Token / Password CBT <span class="required">*</span></label>
             <input type="text" id="user_token" readonly placeholder="Otomatis dibuat saat memilih event" class="input-disabled input-uppercase" required>
@@ -355,7 +367,7 @@
           Terima kasih telah melengkapi dan mengirimkan data pendaftaran. Data Anda telah kami terima dan akan diproses sesuai dengan ketentuan kegiatan.
         </p>
 
-        <!-- KOTAK BARU: RANGKUMAN KREDENSIAL & NOTIFIKASI EMAIL #1 -->
+        <!-- KOTAK RANGKUMAN KREDENSIAL & NOTIFIKASI EMAIL #1 -->
         <div class="credentials-summary-box" style="background: #f0f9ff; border: 1.5px dashed #0284c7; padding: 18px; border-radius: 12px; margin-bottom: 20px;">
           <h3 style="font-size: 15px; font-weight: 800; color: #0f172a; margin-bottom: 12px; text-align: center;">
             🔑 Rangkuman Kredensial Akses CBT Ujian
