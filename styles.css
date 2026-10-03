@@ -462,7 +462,7 @@ body {
 }
 
 /* ==========================================
-   SUCCESS PAGE STYLING
+   SUCCESS PAGE STYLING & CREDENTIALS BOX
    ========================================== */
 .success-page {
   text-align: left;
@@ -502,6 +502,15 @@ body {
   line-height: 1.6;
   margin-bottom: 16px;
   text-align: center;
+}
+
+/* Styling Tambahan Kotak Kredensial CBT */
+.credentials-summary-box {
+  background-color: #f0f9ff;
+  border: 1.5px dashed var(--primary-blue);
+  padding: 18px;
+  border-radius: 12px;
+  margin-bottom: 20px;
 }
 
 .success-alert {
