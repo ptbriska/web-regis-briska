@@ -6,6 +6,14 @@ const EVENT_LIST_URL = "./event_list.txt";
 
 // Pemetaan Relasional Event -> Array Bidang
 let eventDataMap = {};
+let rawGoogleCredential = ""; // Menyimpan token JWT mentah dari Google
+
+// Helper: Generate User Token / Password (Format: BRK-KODE-5Angka)
+function generateUserToken(kodeKegiatan) {
+  if (!kodeKegiatan) return "";
+  const randomNum = Math.floor(10000 + Math.random() * 90000);
+  return `BRK-${kodeKegiatan.toUpperCase().trim()}-${randomNum}`;
+}
 
 // =========================================================================
 // 1. GOOGLE IDENTITY SERVICES (JWT PARSER & CALLBACK)
@@ -26,7 +34,9 @@ function parseJwt(token) {
 }
 
 function handleCredentialResponse(response) {
+  rawGoogleCredential = response.credential; // Simpan raw token
   const data = parseJwt(response.credential);
+  
   if (!data || !data.email) {
     alert("Gagal memverifikasi akun Google. Silakan coba lagi.");
     return;
@@ -51,6 +61,7 @@ document.addEventListener("DOMContentLoaded", function() {
   const selectBidang = document.getElementById("bidang_kegiatan");
   const jalurSelect = document.getElementById("jalur_daftar");
   const infoKolektif = document.getElementById("infoKolektif");
+  const inputUserToken = document.getElementById("user_token");
   
   const secBayar = document.getElementById("secBayar");
   const secKtp = document.getElementById("secKtp");
@@ -125,7 +136,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
-  // Listener Pilihan Kode Event -> Mengisi Pilihan Bidang Sesuai Event
+  // Listener Pilihan Kode Event -> Mengisi Pilihan Bidang & Generate User Token
   if (selectEvent) {
     selectEvent.addEventListener("change", function() {
       const selectedEvent = this.value;
@@ -134,7 +145,13 @@ document.addEventListener("DOMContentLoaded", function() {
       if (!selectedEvent || !eventDataMap[selectedEvent]) {
         selectBidang.innerHTML = '<option value="">-- Pilih Event Terlebih Dahulu --</option>';
         selectBidang.disabled = true;
+        if (inputUserToken) inputUserToken.value = "";
         return;
+      }
+
+      // Generate User Token Otomatis saat Event Dipilih
+      if (inputUserToken) {
+        inputUserToken.value = generateUserToken(selectedEvent);
       }
 
       const availableBidang = eventDataMap[selectedEvent];
@@ -201,7 +218,6 @@ document.addEventListener("DOMContentLoaded", function() {
       activateInputs([inputBayar, inputIdentitasSpesifik]);
     } 
     else if (v === "bersyarat") {
-      // Tarif Bersyarat (Medsos): Bukti Bayar + 5 Berkas Medsos
       if (secBayar) secBayar.classList.remove("hidden");
       if (secMedsos) secMedsos.classList.remove("hidden");
       activateInputs([
@@ -211,7 +227,6 @@ document.addEventListener("DOMContentLoaded", function() {
       ]);
     } 
     else if (v === "freemium") {
-      // Tarif Freemium: Hanya 5 Berkas Medsos
       if (secMedsos) secMedsos.classList.remove("hidden");
       activateInputs([
         inputFollowKelasbisa, inputFollowPelaksana,
@@ -249,7 +264,7 @@ document.addEventListener("DOMContentLoaded", function() {
     if (responseMessage) responseMessage.className = "hidden";
 
     try {
-      const MAX_SIZE = 2 * 1024 * 1024; // Limit 2MB
+      const MAX_SIZE = 2 * 1024 * 1024; // Limit 2MB per file
 
       const processFile = async (inputEl, labelName) => {
         if (inputEl && !inputEl.disabled && inputEl.files && inputEl.files.length > 0) {
@@ -262,18 +277,37 @@ document.addEventListener("DOMContentLoaded", function() {
 
       const kodeKegiatanVal = selectEvent.value ? selectEvent.value.toUpperCase().trim() : "";
       const bidangKegiatanVal = selectBidang.value ? selectBidang.value.trim() : "-";
+      const usernameVal = document.getElementById("username").value.trim();
+      const userTokenVal = document.getElementById("user_token").value.trim();
 
-      if (!kodeKegiatanVal) {
-        throw new Error("Silakan pilih Event / Kegiatan terlebih dahulu.");
-      }
-      if (!bidangKegiatanVal || bidangKegiatanVal.includes("-- Pilih")) {
-        throw new Error("Silakan pilih Bidang / Kategori terlebih dahulu.");
-      }
+      if (!kodeKegiatanVal) throw new Error("Silakan pilih Event / Kegiatan terlebih dahulu.");
+      if (!bidangKegiatanVal || bidangKegiatanVal.includes("-- Pilih")) throw new Error("Silakan pilih Bidang / Kategori terlebih dahulu.");
+      if (!usernameVal) throw new Error("Silakan buat Username terlebih dahulu.");
+      if (!userTokenVal) throw new Error("User Token belum terbuat. Silakan pilih Event kembali.");
+
+      // Konversi file secara paralel
+      const [
+        file_bayar, file_ktp, file_identitas_spesifik,
+        file_follow_kelasbisa, file_follow_pelaksana,
+        file_komen_tag, file_share_wa_tele, file_share_story
+      ] = await Promise.all([
+        processFile(inputBayar, "Bukti Bayar"),
+        processFile(inputKtp, "KTP"),
+        processFile(inputIdentitasSpesifik, "Identitas Spesifik"),
+        processFile(inputFollowKelasbisa, "Follow @kelasbisaid"),
+        processFile(inputFollowPelaksana, "Follow Pelaksana"),
+        processFile(inputKomenTag, "Komen Tag 10 Teman"),
+        processFile(inputShareWaTele, "Share WA/Telegram"),
+        processFile(inputShareStory, "Share Story")
+      ]);
 
       const payload = {
+        credentialToken: rawGoogleCredential,
         kode_kegiatan: kodeKegiatanVal,
         bidang_kegiatan: bidangKegiatanVal,
         jalur_daftar: jalurSelect.options[jalurSelect.selectedIndex].text,
+        username: usernameVal,
+        user_token: userTokenVal,
         nama_lengkap: document.getElementById("nama_lengkap").value.trim(),
         nomor_hp: document.getElementById("nomor_hp").value.trim(),
         email: document.getElementById("email").value.trim(),
@@ -285,21 +319,14 @@ document.addEventListener("DOMContentLoaded", function() {
         asal_provinsi: document.getElementById("asal_provinsi").value,
         persetujuan_iklan: document.getElementById("persetujuan_iklan").value,
 
-        file_bayar: await processFile(inputBayar, "Bukti Bayar"),
-        file_ktp: await processFile(inputKtp, "KTP"),
-        file_identitas_spesifik: await processFile(inputIdentitasSpesifik, "Identitas Spesifik"),
-        file_follow_kelasbisa: await processFile(inputFollowKelasbisa, "Follow @kelasbisaid"),
-        file_follow_pelaksana: await processFile(inputFollowPelaksana, "Follow Pelaksana"),
-        file_komen_tag: await processFile(inputKomenTag, "Komen Tag 10 Teman"),
-        file_share_wa_tele: await processFile(inputShareWaTele, "Share WA/Telegram"),
-        file_share_story: await processFile(inputShareStory, "Share Story")
+        file_bayar, file_ktp, file_identitas_spesifik,
+        file_follow_kelasbisa, file_follow_pelaksana,
+        file_komen_tag, file_share_wa_tele, file_share_story
       };
 
       const response = await fetch(SCRIPT_URL, {
         method: "POST",
-        headers: { 
-          "Content-Type": "text/plain;charset=utf-8" 
-        },
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
         body: JSON.stringify(payload)
       });
 
@@ -308,6 +335,16 @@ document.addEventListener("DOMContentLoaded", function() {
       if (resultData.result === "success") {
         form.classList.add("hidden");
         if (formHeader) formHeader.classList.add("hidden");
+
+        // Isi data rangkuman kredensial di Success Page
+        const resUsername = document.getElementById("resUsername");
+        const resUserToken = document.getElementById("resUserToken");
+        const resEmailText = document.getElementById("resEmailText");
+
+        if (resUsername) resUsername.innerText = payload.username;
+        if (resUserToken) resUserToken.innerText = payload.user_token;
+        if (resEmailText) resEmailText.innerText = payload.email;
+
         if (successPage) successPage.classList.remove("hidden");
         window.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
