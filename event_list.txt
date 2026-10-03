@@ -1,0 +1,4 @@
+BG01PO-POCI2026 : Kimia, Biologi, Informatika, Fisika, Kebumian, Astronomi, Geografi, Ekonomi, AI, Matematika
+BG02KT-ELEMENTA26 : Kebumian, Geografi, Astronomi
+BG03PS-PLASMAOSK : Kimia, Biologi, Informatika, Fisika, Kebumian, Astronomi, Geografi, Ekonomi
+BG04PO-WEBGRIDS : OrangeML, GEE, JAMOVI
