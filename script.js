@@ -2,17 +2,24 @@
 // CONFIGURATION
 // =========================================================================
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz2MPM2sFzYOggxYdwLHhfglOCCTz4Reu8cYh5IsbxmHj6MYaPBXDYO0jpCYSXyxeI6/exec";
-const EVENT_LIST_URL = "./event_list.txt";
+
+// Pemetaan File .txt Berdasarkan Kategori Brand
+const BRAND_FILE_MAP = {
+  "event": "./event_list.txt",
+  "training": "./training_list.txt",
+  "to": "./to_list.txt",
+  "buku": "./buku_list.txt"
+};
 
 // Pemetaan Relasional Event -> Array Bidang
 let eventDataMap = {};
 let rawGoogleCredential = ""; // Menyimpan token JWT mentah dari Google
 
-// Helper: Generate User Token / Password (Format: BRK-KODE-5Angka)
+// Helper: Generate User Token / Password (Format: KODE_KEGIATAN-5AngkaRandom)
 function generateUserToken(kodeKegiatan) {
   if (!kodeKegiatan) return "";
   const randomNum = Math.floor(10000 + Math.random() * 90000);
-  return `BRK-${kodeKegiatan.toUpperCase().trim()}-${randomNum}`;
+  return `${kodeKegiatan.toUpperCase().trim()}-${randomNum}`;
 }
 
 // =========================================================================
@@ -57,6 +64,7 @@ function handleCredentialResponse(response) {
 // =========================================================================
 
 document.addEventListener("DOMContentLoaded", function() {
+  const selectBrand = document.getElementById("kategori_brand");
   const selectEvent = document.getElementById("kode_kegiatan");
   const selectBidang = document.getElementById("bidang_kegiatan");
   const jalurSelect = document.getElementById("jalur_daftar");
@@ -85,22 +93,26 @@ document.addEventListener("DOMContentLoaded", function() {
   ];
 
   // -----------------------------------------------------------------------
-  // A. PARSING & AUTO-POPULATE DARI FILE event_list.txt
+  // A. PARSING & AUTO-POPULATE DINAMIS BERDASARKAN FILE BRAND
   // -----------------------------------------------------------------------
-  async function loadEventAndBidangData() {
+  async function loadProductData(fileUrl) {
     if (!selectEvent || !selectBidang) return;
 
     try {
-      const response = await fetch(EVENT_LIST_URL + "?t=" + new Date().getTime());
-      if (!response.ok) throw new Error("File event_list.txt tidak ditemukan.");
+      selectEvent.innerHTML = '<option value="">-- Memuat Daftar Produk... --</option>';
+      selectEvent.disabled = true;
+      selectBidang.innerHTML = '<option value="">-- Pilih Produk Terlebih Dahulu --</option>';
+      selectBidang.disabled = true;
+      if (inputUserToken) inputUserToken.value = "";
+
+      const response = await fetch(fileUrl + "?t=" + new Date().getTime());
+      if (!response.ok) throw new Error("File daftar produk tidak ditemukan.");
 
       const textData = await response.text();
       const lines = textData.split("\n").map(l => l.trim()).filter(l => l.length > 0);
 
       eventDataMap = {};
-      selectEvent.innerHTML = '<option value="">-- Pilih Event / Kegiatan --</option>';
-      selectBidang.innerHTML = '<option value="">-- Pilih Event Terlebih Dahulu --</option>';
-      selectBidang.disabled = true;
+      selectEvent.innerHTML = '<option value="">-- Pilih Event / Produk / Kegiatan --</option>';
 
       if (lines.length === 0) {
         selectEvent.innerHTML = '<option value="">-- Pendaftaran Sedang Ditutup --</option>';
@@ -131,19 +143,39 @@ document.addEventListener("DOMContentLoaded", function() {
       });
 
     } catch (err) {
-      console.error("Gagal memuat event:", err);
-      selectEvent.innerHTML = '<option value="">-- Gagal Memuat Daftar Event --</option>';
+      console.error("Gagal memuat produk:", err);
+      selectEvent.innerHTML = '<option value="">-- Gagal Memuat Daftar Produk --</option>';
+      selectEvent.disabled = true;
     }
   }
 
-  // Listener Pilihan Kode Event -> Mengisi Pilihan Bidang & Generate User Token
+  // Listener Pilihan Kategori Brand -> Memuat File TXT Terkait
+  if (selectBrand) {
+    selectBrand.addEventListener("change", function() {
+      const selectedBrand = this.value;
+      eventDataMap = {};
+
+      if (!selectedBrand || !BRAND_FILE_MAP[selectedBrand]) {
+        selectEvent.innerHTML = '<option value="">-- Pilih Kategori Produk Terlebih Dahulu --</option>';
+        selectEvent.disabled = true;
+        selectBidang.innerHTML = '<option value="">-- Pilih Produk Terlebih Dahulu --</option>';
+        selectBidang.disabled = true;
+        if (inputUserToken) inputUserToken.value = "";
+        return;
+      }
+
+      loadProductData(BRAND_FILE_MAP[selectedBrand]);
+    });
+  }
+
+  // Listener Pilihan Kode Event -> Mengisi Pilihan Bidang & Generate User Token (Format: KODE-5RANDOM)
   if (selectEvent) {
     selectEvent.addEventListener("change", function() {
       const selectedEvent = this.value;
       selectBidang.innerHTML = "";
 
       if (!selectedEvent || !eventDataMap[selectedEvent]) {
-        selectBidang.innerHTML = '<option value="">-- Pilih Event Terlebih Dahulu --</option>';
+        selectBidang.innerHTML = '<option value="">-- Pilih Produk Terlebih Dahulu --</option>';
         selectBidang.disabled = true;
         if (inputUserToken) inputUserToken.value = "";
         return;
@@ -167,8 +199,6 @@ document.addEventListener("DOMContentLoaded", function() {
       selectBidang.disabled = false;
     });
   }
-
-  loadEventAndBidangData();
 
   // -----------------------------------------------------------------------
   // B. DYNAMIC TOGGLE UPLOAD SECTIONS
@@ -275,15 +305,17 @@ document.addEventListener("DOMContentLoaded", function() {
         return null;
       };
 
+      const brandVal = selectBrand ? selectBrand.options[selectBrand.selectedIndex].text : "-";
       const kodeKegiatanVal = selectEvent.value ? selectEvent.value.toUpperCase().trim() : "";
       const bidangKegiatanVal = selectBidang.value ? selectBidang.value.trim() : "-";
       const usernameVal = document.getElementById("username").value.trim();
       const userTokenVal = document.getElementById("user_token").value.trim();
 
-      if (!kodeKegiatanVal) throw new Error("Silakan pilih Event / Kegiatan terlebih dahulu.");
+      if (!selectBrand.value) throw new Error("Silakan pilih Kategori Produk / Brand terlebih dahulu.");
+      if (!kodeKegiatanVal) throw new Error("Silakan pilih Event / Produk / Kegiatan terlebih dahulu.");
       if (!bidangKegiatanVal || bidangKegiatanVal.includes("-- Pilih")) throw new Error("Silakan pilih Bidang / Kategori terlebih dahulu.");
       if (!usernameVal) throw new Error("Silakan buat Username terlebih dahulu.");
-      if (!userTokenVal) throw new Error("User Token belum terbuat. Silakan pilih Event kembali.");
+      if (!userTokenVal) throw new Error("User Token belum terbuat. Silakan pilih Produk kembali.");
 
       // Konversi file secara paralel
       const [
@@ -303,6 +335,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
       const payload = {
         credentialToken: rawGoogleCredential,
+        kategori_brand: brandVal,
         kode_kegiatan: kodeKegiatanVal,
         bidang_kegiatan: bidangKegiatanVal,
         jalur_daftar: jalurSelect.options[jalurSelect.selectedIndex].text,
